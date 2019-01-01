@@ -89,7 +89,6 @@ namespace SimpleGame
             catch(Exception e)
             {
                 Program.speakerEnabed = false;
-                Program.glitchGame();
                 Program.speakerSay(60, Voice.Default, e.Message);
             }
         }

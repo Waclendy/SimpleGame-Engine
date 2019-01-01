@@ -23,7 +23,9 @@ namespace SimpleGame
         private static int speakerTarget = 0;
         public static bool speakerEnabed = false;
         public static Sound glitchSound;
-        public static Music mainWorldMusic = new Music(SoundCore.CONTENT_PATH + "\\Sounds\\World\\world_main_2.wav");
+        public static Music mainMusic = new Music(SoundCore.CONTENT_PATH + "\\Sounds\\World\\world_main_2.wav");
+        public static Music firstMusic = new Music(SoundCore.CONTENT_PATH + "\\Music\\island.wav");
+        public static Music secondMusic = new Music(SoundCore.CONTENT_PATH + "\\Sounds\\World\\space_bed_02.ogg");
         public static int loseCounter = 14;
         public static bool stopAll = false;
         public static bool Excepted = false;
@@ -83,45 +85,7 @@ namespace SimpleGame
 
 
         }
-        public static void glitchGame()
-        {
-            glitchSound.Play();
-            mainWorldMusic.Pause();
-            stopAll = true;
-            while(glitchSound.Status == SoundStatus.Playing)
-            {
-                
-            }
-            mainWorldMusic.Play();
-            glitcheScreen = true;
-            int _switcher1 = 0;
-            if (glitcheScreen)
-            {
-                Console.SetCursorPosition(0, 0);
-                    for (int xi = 0; xi < 667; xi++)
-                    {
-                        if (_switcher1 == 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write(@"|\|\\||/|");
-                            _switcher1 = 1;
-                        }
-                        else
-                        {
-                            Console.ForegroundColor = ConsoleColor.DarkGray;
-                            Console.Write(@"/||/\\/\");
-                            _switcher1 = 0;
-                        }
-                    }
-                
-            }
-            Thread.Sleep(100);
-            Console.Clear();
-            stopAll = false;
-            SoundCore.Play("World", "ogg", "wsound_spark_0", 1, 4, 120);
-            glitcheScreen = false;
-
-        }
+       
         static void Main(string[] args)
         {
 
@@ -129,15 +93,19 @@ namespace SimpleGame
             Console.Clear();
             Console.WindowHeight = 40;
             Console.WindowWidth = 103;
-            mainWorldMusic.Volume = 55;
-            mainWorldMusic.Loop = true;
-            mainWorldMusic.Play();
+
+            mainMusic.Volume = 55;
+            mainMusic.Loop = true;
+
+            secondMusic.Loop = true;
+            firstMusic.Loop = true;
 
             SoundCore.Load();
             Intil();
 
             UI.Menu menu = new UI.Menu();
-            string[] str = { "Начать Приключение", "Игровые Звуки", "Тест Диалога", "Выход" };
+            string[] str = { "Начать Приключение", "Игровые Звуки", "Тест Диалога", "Пещера Правды", "Выход" };
+            int num5 = 0;
             gt:
             int menu_Select = 0; 
             menu_Select = menu.MainMenu(str);
@@ -145,12 +113,55 @@ namespace SimpleGame
             {
                 case 0:
                     SoundCore.Play("Menu Select");
+                    mainMusic.Play();
                     break;
                 case 2:
                     SoundCore.Play("Menu Select");
                     speakerSay(60, Voice.Default, File.ReadAllLines("..\\..\\Program.cs"));
                     goto gt;
                 case 3:
+                    if (num5 == 0)
+                    {
+                        SoundCore.Play("Menu Select");
+                        Thread.Sleep(1000);
+                        SoundCore.Play("Damage Taken");
+                        str[3] = "Отдать душу";
+                        
+                    }
+                    else if(num5 == 1)
+                    {
+                        SoundCore.Play("Menu Select");
+                        Thread.Sleep(1000);
+                        SoundCore.Play("Damage Taken");
+                        str[3] = "По?№чить пр№*у";
+                    }
+                    else if(num5 <= 5)
+                    {
+                        SoundCore.Play("Menu Select");
+                        Thread.Sleep(500);
+                        SoundCore.Play("Damage Taken");
+                    }
+                    else if(num5 <= 10)
+                    {
+                        SoundCore.Play("Menu Select");
+                        Thread.Sleep(500);
+                        SoundCore.Play("Damage Taken");
+                        str[3] = "120";
+                    }
+                    else if(num5 <= 15)
+                    {
+                        SoundCore.Play("Menu Select");
+                        Thread.Sleep(500);
+                        SoundCore.Play("Damage Taken");
+                        str[3] = "";
+                    }
+                    else
+                    {
+                        str[3] = "X";
+                    }
+                    num5++;
+                    goto gt;
+                case 4:
                     SoundCore.Play("Menu Select");
                     speakerSay(70, Voice.Default, "Скоро увидимся, герой!**");
                     Environment.Exit(0);
@@ -321,25 +332,6 @@ namespace SimpleGame
                 }
                 catch(Exception e)
                 {
-                    Excepted = true;
-                    Debug.WriteLine("\n\n\n\n\n\n");
-                    Debug.WriteLine($"GAME ERROR SCREEN INFO: \n" +
-                        $"\n" +
-                        $"A EXCEPTION WAS MADE GLITCH IN GAME\n" +
-                        $"EXCEPTION MESSAGE: \n" +
-                        $"{e.Message}\n" +
-                        $"REPARING THE GAME...\n" +
-                        $"WAIT A FEW SECONDS...\n");
-                    glitchGame();
-                    string[] txts = 
-                    {
-                        "О боже!**** Вы взломали игру. ",
-                        "Нц.** Снова ошибка.**",
-                        "Почему** эта игра** не может**% р&а&б&о&т&а&т&ь& н&о&р&м&а&л&ь&н&о&?",
-                        "Снова? Агрх.***"
-                    };
-
-                    speakerSay(70, Voice.Default, txts[Random.Next(0, txts.Length)], e.Message);
                 }
 
             }
