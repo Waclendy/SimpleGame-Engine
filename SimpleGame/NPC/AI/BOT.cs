@@ -221,25 +221,15 @@ namespace SimpleGame.NPC
         }
         public override void Main()
         {
-            Program.Player.inGravity = false;
+           // Program.Player.inGravity = false;
             Direction AI_Direction = Direction.NONE;
             while (true)
             {
-                int px = 0;
-                int py = 0;
-                bool powerup = false;
-                foreach(Items.Powerup.Base basic in Program.Reluics)
-                {
-                    if(!basic.isPickedUp)
-                    {
-                        powerup = true;
-                    }
-                }
+              
 
                 try
                 {
-                    if (!powerup)
-                    {
+
                         if (isFalling)
                         {
 
@@ -284,7 +274,6 @@ namespace SimpleGame.NPC
                             Thread.Sleep(200);
                             continue;
                         }
-                    }
                     else
                     {
 

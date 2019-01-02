@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace SimpleGame
 {
-    public enum TileType { None, Wall, Bricks, Background, JumpEffectBackground, Spawnpoint, Object, GlitchWall, JumpFloor, Ground, StarWall }
+    public enum TileType { None, Wall, Bricks, Background, JumpEffectBackground, Spawnpoint, Object, GlitchWall, JumpFloor, Ground}
     public class Tile
     {
         public string tileChar = "E";
@@ -32,22 +32,7 @@ namespace SimpleGame
                     JumpEffect.Enable(1.5);
                     SoundCore.Play("Object Flying");
                     Program.Player.Jump();
-                break;
-                case TileType.StarWall:
-                        if (!Program.StarFruitEnabled)
-                        {
-                            if (Program.World.getTile(Program.Player.X, Program.Player.Y + 1) != TileType.None)
-                            {
-                                SoundCore.Play("NoClip");
-                                while (Program.World.getTile(Program.Player.X, Program.Player.Y + 1) != TileType.None)
-                                {
-                                    Program.Player.Y++;
-                                }
-                            }
-                            Program.Player.Y++;
-                    }
-
-                    break;
+                break; 
                 case TileType.Bricks:
                         Thread.Sleep(500);
                         Program.World.setTile(X, Y, TileType.Ground);
@@ -121,10 +106,7 @@ namespace SimpleGame
                     tileBackColor = ConsoleColor.Black;
                     Visible = false;
                     break;
-                case TileType.StarWall:
-                    tileChar = " ";
-                    tileBackColor = ConsoleColor.DarkGreen;
-                    break;
+               
             }
         }
         public Tile(Tile copy, int x, int y)

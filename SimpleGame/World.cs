@@ -7,8 +7,9 @@ namespace SimpleGame
     public class World
     {
         public List<Panel> panels;
+
         public Tile[][] chunks;
-        public List<Tile[][]> chunks_parts;
+
         public bool SFXEnabled = true;
         public const int CHUNK_SIZE = 30;
         public const int CHUNK_X = 100;
@@ -246,20 +247,7 @@ namespace SimpleGame
             panels[panels.Count - 1].Y = CHUNK_Y - yy;
             panels[panels.Count - 1].Size = 5;
 
-            for (int i = 0; i < 1; i++)
-            {
-                try
-                {
-                    int rndx = Program.Random.Next(60, CHUNK_X - 2);
-                    int rndy = Program.Random.Next(10, CHUNK_Y - 9);
-
-                    drawObject(rndx, rndy, 3, 1, TileType.StarWall);
-                }
-                catch
-                {
-
-                }
-            }
+           
 
             int rnd1 = Program.Random.Next(0, 9);
             switch (rnd1)
@@ -337,20 +325,7 @@ namespace SimpleGame
 
 
 
-            for(int i = 0; i < 4; i ++)
-            {
-                try
-                {
-                    int rndx = Program.Random.Next(0, CHUNK_X - 5);
-                    int rndy = Program.Random.Next(10, CHUNK_Y - 9);
-
-                    drawObject(rndx, rndy, 3, 1, TileType.StarWall);
-                }
-                catch
-                {
-
-                }
-            }
+        
 
             setTile(panels[0].X + 2, panels[0].Y - 5, TileType.Spawnpoint);
 

@@ -9,10 +9,10 @@ namespace SimpleGame
 
         class ProcessThread
         {
-
+           
             public void Run()
             {
-
+               
                 while(ingame)
                 {
                     if (stopAll)
@@ -24,10 +24,11 @@ namespace SimpleGame
 
 
                     World.Update();
+
                     Player.Draw();
                     Player.ProcessPlayer();
-                    //Bot.Draw();
-                    //Bot.ProcessPlayer();
+
+
 
 
                     try

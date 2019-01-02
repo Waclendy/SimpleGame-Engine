@@ -64,7 +64,6 @@ namespace SimpleGame
             Player.playerFallSuccess += onSuccessFall;
 
             World.chunks = new Tile[World.CHUNK_X][];
-            World.chunks_parts = new List<Tile[][]>();
             mThread = new ProcessThread();
 
             for (int chunk = 0; chunk < World.CHUNK_X; chunk++)
@@ -72,22 +71,12 @@ namespace SimpleGame
                 World.chunks[chunk] = new Tile[World.CHUNK_Y];
             }
 
-            for (int i = 0; i < 8; i++)
-                World.chunks_parts.Add(new Tile[World.CHUNK_X/8][]);
-
-            foreach(Tile[][] tile in World.chunks_parts)
-            {
-                for (int chunk = 0; chunk < World.CHUNK_X / 8; chunk++)
-                {
-                    tile[chunk] = new Tile[World.CHUNK_Y];
-                }
-            }
-
 
         }
        
         static void Main(string[] args)
         {
+            
 
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
@@ -222,7 +211,6 @@ namespace SimpleGame
 
             thrd = new Thread(mThread.Run);
             thrd.Start();
-            //Bot.Process();
             while (ingame)
                 {
                     Key = Console.ReadKey(true);
