@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsolePaint.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Items\Base.cs" />
     <Compile Include="Items\Effects\FlyEffect.cs" />

@@ -294,7 +294,7 @@ namespace SimpleGame
             int pos = -10;
             for (int i = 0; i < panels.Count; i++)
             {
-                yy = Program.Random.Next(4, 14);
+                yy = Program.Random.Next(6, 14);
                 pos += 10;
                 panels[i].X = 5 + pos;
                 panels[i].Y = CHUNK_Y - yy;

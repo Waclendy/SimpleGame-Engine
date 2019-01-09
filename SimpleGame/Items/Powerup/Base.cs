@@ -48,11 +48,8 @@ namespace SimpleGame.Items.Powerup
         {
             if (!isPickedUp)
             {
-                Console.ForegroundColor = artifactColor;
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.SetCursorPosition(X, Y);
-                Console.Write(artifactChar);
-                Console.ForegroundColor = ConsoleColor.White;
+
+                ConsolePaint.Paint(X, Y, ConsolePaint.DEFAULT_BACKGROUND, artifactColor, artifactChar);
             }
 
         }

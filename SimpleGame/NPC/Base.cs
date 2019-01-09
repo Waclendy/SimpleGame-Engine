@@ -38,18 +38,12 @@ namespace SimpleGame.NPC
             if (Y <= 0)
                 Y = 0;
 
-            Console.SetCursorPosition(lastx, lasty);
+
             if (trailType != TileType.None)
                 Program.World.setTile(lastx, lasty, trailType);
 
-            Console.Write(" ");
-
-            Console.ForegroundColor = npcColor;
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.SetCursorPosition(X, Y);
-            Console.Write(npcChar);
-            Console.SetCursorPosition(X, Y);
-            Console.ForegroundColor = ConsoleColor.White;
+            ConsolePaint.Paint(lastx, lasty, ConsolePaint.DEFAULT_BACKGROUND, ConsolePaint.DEFAULT_FOREGROUND, " ");
+            ConsolePaint.Paint(X, Y, ConsolePaint.DEFAULT_BACKGROUND, npcColor, npcChar);
 
             lastx = X;
             lasty = Y;

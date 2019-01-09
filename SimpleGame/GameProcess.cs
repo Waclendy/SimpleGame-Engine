@@ -9,10 +9,18 @@ namespace SimpleGame
 
         class ProcessThread
         {
-           
+           public void Run2()
+            {
+                while(ingame)
+                {
+                    Bot.Draw();
+                    Bot.ProcessPlayer();
+                }
+            }
             public void Run()
             {
-               
+                Thread thrd = new Thread(Run2);
+                //thrd.Start();
                 while(ingame)
                 {
                     if (stopAll)

@@ -12,10 +12,6 @@ namespace SimpleGame
     partial class Program
     {
 
-
-
-
-
         public static bool StarFruitEnabled = false;
         public static bool ingame = true;
         public const int FRAME_RATE = 0;
@@ -211,6 +207,7 @@ namespace SimpleGame
 
             thrd = new Thread(mThread.Run);
             thrd.Start();
+            Bot.Process();
             while (ingame)
                 {
                     Key = Console.ReadKey(true);

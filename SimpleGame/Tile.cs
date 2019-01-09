@@ -121,11 +121,7 @@ namespace SimpleGame
         }
         public void Draw()
         {
-            Console.BackgroundColor = tileBackColor;
-            Console.ForegroundColor = tileForeColor;
-            Console.SetCursorPosition(X, Y);
-            Console.Write(tileChar);
-            Console.BackgroundColor = ConsoleColor.Black;
+            ConsolePaint.Paint(X, Y, tileBackColor, tileForeColor, tileChar);
         }
     }
 }

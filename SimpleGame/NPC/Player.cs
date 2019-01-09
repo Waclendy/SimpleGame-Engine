@@ -68,15 +68,13 @@ namespace SimpleGame.NPC
             if (Y <= 0)
                 Y = 0;
 
-            Console.SetCursorPosition(lastx, lasty);
-            Console.Write(" ");
+            ConsolePaint.Paint(lastx, lasty, ConsolePaint.DEFAULT_BACKGROUND, ConsolePaint.DEFAULT_FOREGROUND, " ");
+
 
             lastx = X;
             lasty = Y;
 
-            Console.SetCursorPosition(X, Y);
-            Console.Write(npcChar);
-            Console.SetCursorPosition(X, Y);
+            ConsolePaint.Paint(X, Y, ConsolePaint.DEFAULT_BACKGROUND, npcColor, npcChar);
 
             Program.World.setTile(lastx, lasty, trailType);
 
@@ -139,10 +137,12 @@ namespace SimpleGame.NPC
                 playerFall.Invoke(this, new playerEventArgs(this));
             }
 
-            if (Program.World.panels[4].X <= X && Program.World.panels[4].Y - 1 == Y)
+            for(int i = 4; i <Program.World.panels.Count; i ++)
+            if (Program.World.panels[i].X <= X && Program.World.panels[i].Y - 1 == Y)
             {
                 playerOnMiddle.Invoke(this, new playerEventArgs(this));
             }
+           
 
             try
             {
