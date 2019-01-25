@@ -15,7 +15,13 @@ namespace SimpleGame.Items.Powerup
             artifactColor = ConsoleColor.Green;
             artifactChar = "*";
             useTime = 8 * 1000;
-            Spawn(x, y);
+            _this.type = Type.ENT_ITEM;
+            _this.item = Item.IT_STAR_FRUIT;
+            _this.oEvent = Event.EV_ITEM_SPAWN;
+            _this.X = x;
+            _this.Y = y;
+            X = x;
+            Y = y;
         }
 
         protected override void _pickup()
@@ -27,9 +33,6 @@ namespace SimpleGame.Items.Powerup
                 Program.Player.npcColor = ConsoleColor.Green;
                 Program.StarFruitEnabled = true;
                 Thread.Sleep(useTime);
-
-            if (gameLife != Program.loseCounter)
-                return;
 
                 SoundCore.Play("Star Falling");
                 Program.Player.npcColor = ConsoleColor.Cyan;

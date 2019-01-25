@@ -15,7 +15,13 @@ namespace SimpleGame
             Sounds["Amb"].Volume = 66;
             Sounds.Add("Alarm", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\wsound_warn.ogg")));
             Sounds.Add("Motion", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\wsound_motion.ogg")));
-            Sounds.Add("Glitch", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\wsound_glitch_1.ogg")));
+            Sounds.Add("Glitch", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\hum2.wav")));
+            Sounds.Add("Destroy", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\destroy.wav")));
+            Sounds.Add("Error", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\glitch.wav")));
+            Sounds["Glitch"].Loop = true;
+            Sounds["Glitch"].Volume = 50;
+            Sounds.Add("UI", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\space_bed_03.ogg")));
+            Sounds["UI"].Loop = true;
 
             Sounds.Add("TeleportUse", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Feedback\\Item_4.wav"))); 
             Sounds.Add("TeleportReload", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Feedback\\MaxMana.wav")));
@@ -55,14 +61,18 @@ namespace SimpleGame
             Sounds.Add("Item Spawned", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\item_spawned.wav")));
             Sounds.Add("Item Used", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\item_use.wav")));
             Sounds.Add("Object Spawn", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\spawned.wav")));
+
             Sounds.Add("Menu Beep", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\menu_beep.wav")));
             Sounds.Add("Menu Select", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\menu_selected.wav")));
 
+            //Sounds.Add("Menu Beep", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\blip2.wav")));
+            //Sounds.Add("Menu Select", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\blip1.wav")));
+
             Sounds.Add("Speaker0", new Sound(new SoundBuffer($"{CONTENT_PATH}\\speaker.wav")));
             Sounds.Add("Speaker2", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\speak_flowey.wav")));
-            Sounds.Add("Speaker3", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\speak_angry.wav")));
+            Sounds.Add("Speaker3", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\azazel.wav")));
 
-
+            Sounds["Speaker3"].Volume = 50;
         }
 
         public static void Play(string soundname)
@@ -88,8 +98,9 @@ namespace SimpleGame
             }
             catch(Exception e)
             {
+                Program.makeGlitch(1000, false);
                 Program.speakerEnabed = false;
-                Program.speakerSay(60, Voice.Default, e.Message);
+                Program.speakerSay(100, Voice.Soup, "В последний раз ты видел ошибку в игре доволно давно.", e.Message);
             }
         }
 

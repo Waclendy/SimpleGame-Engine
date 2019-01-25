@@ -15,35 +15,15 @@ namespace SimpleGame.Items.Powerup
         protected Thread Processor;
 
         protected int useTime = 5 * 1000;
-        protected int gameLife;
         public int X;
         public int Y;
+        public entity _this;
 
         protected bool spawnSoundEnabled = true;
 
         public bool isPickedUp = false;
 
-        public void Spawn(int x, int y)
-        {
 
-            X = x;
-            Y = y;
-
-            if (X <= 0)
-                X = 0;
-            else if (X >= 100)
-                X = 99;
-
-            if (Y <= 0)
-                Y = 0;
-            if(spawnSoundEnabled)
-            SoundCore.Play("Item Spawned");
-
-            Draw();
-
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.Clear();
-        }
         protected virtual void Draw()
         {
             if (!isPickedUp)
@@ -53,13 +33,14 @@ namespace SimpleGame.Items.Powerup
             }
 
         }
-        public void PickUp()
+        public entity PickUp()
         {
-            gameLife = Program.loseCounter;
             isPickedUp = true;
 
             Processor = new Thread(_pickup);
             Processor.Start();
+
+            return _this;
         }
         protected virtual void _pickup()
         {
@@ -67,7 +48,9 @@ namespace SimpleGame.Items.Powerup
         }
         public void Update()
         {
-            
+            _this.X = X;
+            _this.Y = Y;
+            Misc.dispatchEvent(ref _this);
             Draw();
 
             if (X == Program.Player.X && Y == Program.Player.Y && !isPickedUp)

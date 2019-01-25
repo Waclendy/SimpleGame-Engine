@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SimpleGame;
 
 namespace SimpleGame.NPC
 {
@@ -54,6 +55,10 @@ namespace SimpleGame.NPC
             playerDirect = Direction.NONE;
             npcChar = "X";
             npcColor = ConsoleColor.Cyan;
+            _this.type = Type.ENT_PLAYER;
+            _this.oEvent = Event.EV_NONE;
+            _this.X = X;
+            _this.Y = Y;
         }
         public void Teleport(int x, int y, bool likenew)
         {
@@ -220,7 +225,8 @@ namespace SimpleGame.NPC
                 }
                 catch
                 {
-                    playerFall.Invoke(this, new playerEventArgs(this));
+                    // playerFall.Invoke(this, new playerEventArgs(this));
+                    _this.oEvent = Event.EV_PLAYER_DEAD;
                 }
                 Thread.Sleep(Program.FRAME_RATE);
             }

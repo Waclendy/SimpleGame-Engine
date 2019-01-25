@@ -14,7 +14,13 @@ namespace SimpleGame.Items.Powerup
         {
             artifactColor = ConsoleColor.Yellow;
             artifactChar = "?";
-            Spawn(x, y);
+            _this.type = Type.ENT_ITEM;
+            _this.item = Item.IT_TEST_POWERUP;
+            _this.oEvent = Event.EV_ITEM_SPAWN;
+            _this.X = x;
+            _this.Y = y;
+            X = x;
+            Y = y;
         }
 
         protected override void _pickup()
@@ -27,8 +33,6 @@ namespace SimpleGame.Items.Powerup
                 Program.Player.JUMP_WEIGHT = 15;
                 Program.Player.npcColor = ConsoleColor.DarkMagenta;
                 Thread.Sleep(useTime);
-                if (gameLife != Program.loseCounter)
-                    return;
                 SoundCore.Play("Star Falling");
                 Program.Player.JUMP_WEIGHT = NPC.Player.JUMP_DEFAULT_WEIGHT;
                 Program.Player.npcColor = ConsoleColor.Cyan;
@@ -41,8 +45,6 @@ namespace SimpleGame.Items.Powerup
                 Program.Player.JUMP_WEIGHT = 4;
                 Program.Player.npcColor = ConsoleColor.DarkGreen;
                 Thread.Sleep(useTime);
-                if (gameLife != Program.loseCounter)
-                    return;
                 SoundCore.Play("Star Falling");
                 Program.Player.JUMP_WEIGHT = NPC.Player.JUMP_DEFAULT_WEIGHT;
                 Program.Player.npcColor = ConsoleColor.Cyan;

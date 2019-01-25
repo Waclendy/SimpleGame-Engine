@@ -1,29 +1,37 @@
 ﻿using System;
 using System.Threading;
+using SFML.System;
+using SFML.Graphics;
 
 namespace SimpleGame
 {
-    public enum TileType { None, Wall, Bricks, Background, JumpEffectBackground, Spawnpoint, Object, GlitchWall, JumpFloor, Ground}
+    public enum TileType { None, Wall, Bricks, Background, JumpEffectBackground, Spawnpoint, Object, UWall, GlitchWall, JumpFloor, Ground}
     public class Tile
     {
         public string tileChar = "E";
+
         public ConsoleColor tileForeColor = ConsoleColor.Red;
         public ConsoleColor tileBackColor = ConsoleColor.Black;
         public TileType Type = TileType.None;
+
+        public bool firstTime = false;
         public bool Visible = true;
         public int X = 0;
         public int Y = 0;
 
         public void Update()
         {
-
+            if (Program.Pause)
+                return;
             Thread thrd = new Thread(_process);
             thrd.Start();
 
         }
         public void _process()
         {
-            switch(Type)
+            if (Program.Pause)
+                return;
+            switch (Type)
             {
              
                 case TileType.JumpFloor:
@@ -31,13 +39,11 @@ namespace SimpleGame
                     Items.Effects.JumpPad JumpEffect = new Items.Effects.JumpPad();
                     JumpEffect.Enable(1.5);
                     SoundCore.Play("Object Flying");
-                    Program.Player.Jump();
-                break; 
+                    Program.Player._this.oEvent = Event.EV_PLAYER_JUMP;
+                    break; 
                 case TileType.Bricks:
                         Thread.Sleep(500);
                         Program.World.setTile(X, Y, TileType.Ground);
-                        Thread.Sleep(700);
-                        Program.World.setTile(X, Y, TileType.Bricks);
                     break;
                 case TileType.GlitchWall:
                     if (tileForeColor != ConsoleColor.Black)
@@ -45,8 +51,10 @@ namespace SimpleGame
                         tileForeColor = ConsoleColor.Black;
 
                         tileChar = Program.Random.Next(0, 2).ToString();
+                        SoundCore.Play("Destroy");
                     }
                     break;
+                
                 case TileType.JumpEffectBackground:
                     Thread.Sleep(1000);
                     tileChar = " ";
@@ -69,6 +77,11 @@ namespace SimpleGame
                 case TileType.Wall:
                     tileChar = " ";
                     tileBackColor = ConsoleColor.White;
+                    break;
+                case TileType.UWall:
+                    tileChar = "X";
+                    tileForeColor = ConsoleColor.White;
+                    tileBackColor = ConsoleColor.DarkMagenta;
                     break;
                 case TileType.Bricks:
                     tileChar = " ";
@@ -108,6 +121,7 @@ namespace SimpleGame
                     break;
                
             }
+            firstTime = true;
         }
         public Tile(Tile copy, int x, int y)
         {
@@ -118,6 +132,7 @@ namespace SimpleGame
             Visible = copy.Visible;
             X = x;
             Y = y;
+            firstTime = copy.firstTime;
         }
         public void Draw()
         {

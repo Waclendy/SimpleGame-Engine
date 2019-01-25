@@ -15,6 +15,8 @@ namespace SimpleGame.NPC
 
         public bool inGravity = true;
 
+        public entity _this;
+
         public int X = 0;
         public int Y = 0;
 
@@ -52,6 +54,12 @@ namespace SimpleGame.NPC
         public virtual void Update()
         {
             Draw();
+            //X = _this.X;
+            //Y = _this.Y;
+            _this.X = X;
+            _this.Y = Y;
+            Misc.dispatchEvent(ref _this);
+            
         }
 
         public virtual void Main()
@@ -85,7 +93,6 @@ namespace SimpleGame.NPC
             }
         }
         public void Process()
-
         {
             Processor = new Thread(Main);
             Processor.Start();

@@ -15,7 +15,6 @@ namespace SimpleGame.Items
     public class Base
     {
         public event itemEvent itemUse = null;
-
         public string itemName = "player";
         public bool playerHad = false;
         protected Thread Processor;

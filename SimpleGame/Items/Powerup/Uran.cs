@@ -7,30 +7,29 @@ using System.Threading.Tasks;
 
 namespace SimpleGame.Items.Powerup
 {
-    public class Star : Base
+    public class Uran : Base
     {
         
-        public Star(int x, int y)
+        public Uran(int x, int y)
         {
-            artifactColor = ConsoleColor.Red;
-            artifactChar = ".";
+            artifactColor = ConsoleColor.DarkMagenta;
+            artifactChar = "#";
             useTime = 8 * 1000;
             spawnSoundEnabled = false;
             _this.type = Type.ENT_ITEM;
-            _this.item = Item.IT_STAR;
+            _this.item = Item.IT_URAN;
             _this.oEvent = Event.EV_ITEM_SPAWN;
             _this.X = x;
             _this.Y = y;
             X = x;
             Y = y;
+            Misc.vrMenu(Element.EL_MOD_IMPORT_URAN);
         }
 
         protected override void _pickup()
         {
-
-            SoundCore.Play("Eat");
-            Effects.StarEffect starEffect = new Effects.StarEffect();
-            starEffect.Enable(7.4);
+            // Misc.vrMenu(Element.EL_MOD_IMPORT_URAN_USAGE);
+            SoundCore.Sounds["Error"].Play();
         }
     }
 }

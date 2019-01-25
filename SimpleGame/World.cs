@@ -10,6 +10,7 @@ namespace SimpleGame
 
         public Tile[][] chunks;
 
+        public bool customgen = false;
         public bool SFXEnabled = true;
         public const int CHUNK_SIZE = 30;
         public const int CHUNK_X = 100;
@@ -65,8 +66,7 @@ namespace SimpleGame
         }
 
         public void placeBlock(int x, int y, TileType type)
-        {
-            if(Program.glitchSound.Status != SFML.Audio.SoundStatus.Playing)
+        {    
             if (getTile(x,y) == TileType.None)
             {
                 SoundCore.Play("Feedback", "wav", "Dig_", 0, 3, 100);
@@ -79,7 +79,6 @@ namespace SimpleGame
         }
         public void destroyBlock(int x, int y)
         {
-            if (Program.glitchSound.Status != SFML.Audio.SoundStatus.Playing)
                 if (getTile(x, y) != TileType.None)
                 {
                     SoundCore.Play("Feedback", "wav", "Tink_", 0, 3, 100);
@@ -150,20 +149,21 @@ namespace SimpleGame
             {
                 int num1 = Program.Random.Next(0, Program.World.panels.Count);
                 Program.Reluics.Add(new Items.Powerup.StarFruit(panels[num1].X + 8, panels[num1].Y - 7));
+            } else if (num2 >= 5996) {
+                int num1 = Program.Random.Next(0, Program.World.panels.Count);
+                Program.Reluics.Add(new Items.Powerup.God(panels[num1].X + 8, panels[num1].Y - 7));
             }
-
             for (int x = 0; x < CHUNK_X; x++)
             {
 
                 for (int y = 0; y < CHUNK_Y; y++)
                 {
 
-                    if(getTile(x, y) != TileType.None)
-                    {
-                        if (Program.Player.X == x && Program.Player.Y == y - 1)
-                        {
+                    if (getTile(x, y) != TileType.None) {
+                        if (Program.Player.X == x && Program.Player.Y == y - 1) {
                             chunks[x][y].Update();
                         }
+                    
                     }
                 }
             }
@@ -211,7 +211,7 @@ namespace SimpleGame
                     {
                         if (getTile(x, y) != TileType.None)
                         {
-                            setTile(x - 10, y, chunks[x][y]);
+                            setTile(x - Offsets.OF_MEDIUM, y, chunks[x][y]);
 
                             removeObject(x, y, 1, 1);
                         }
@@ -227,25 +227,29 @@ namespace SimpleGame
 
             for(int i = 0; i < Program.Reluics.Count; i ++)
             {
-                int num1 = Program.Reluics[i].X - 10;
+                int num1 = Program.Reluics[i].X - Offsets.OF_MEDIUM;
                 if (num1 <= 0)
                     Program.Reluics.Remove(Program.Reluics[i]);
                 else
-                Program.Reluics[i].X = num1;
+                    Program.Reluics[i].X = num1;
             }
+            //Движение игрока
+            int _x = 0;
+            _x = Program.Player.X - Program.World.panels[4].X;
+            Program.Player.Teleport(Program.World.panels[3].X + _x, Program.Player.Y, false);
 
             //Движение платформ
             for (int i = 0; i < panels.Count - 1; i++)
             {
-                panels[i].Y = panels[i + 1].Y;
-                panels[i].TileType = panels[i + 1].TileType;
-                panels[i].Size = panels[i + 1].Size;
+               panels[i].Y = panels[i + 1].Y;
+                panels[i].tileType = panels[i + 1].tileType;
+                panels[i].size = panels[i + 1].size;
             }
 
             int yy = Program.Random.Next(4, 14);
             panels[panels.Count - 1].X = 75;
             panels[panels.Count - 1].Y = CHUNK_Y - yy;
-            panels[panels.Count - 1].Size = 5;
+            panels[panels.Count - 1].size = 5;
 
            
 
@@ -253,22 +257,46 @@ namespace SimpleGame
             switch (rnd1)
             {
                 case 3:
-                    panels[panels.Count - 1].TileType = TileType.JumpFloor;
-                    panels[panels.Count - 1].Size = 7;
+                    panels[panels.Count - 1].tileType = TileType.JumpFloor;
+                    panels[panels.Count - 1].size = 7;
                     break;
                 case 2:
-                    panels[panels.Count - 1].TileType = TileType.Bricks;
+                    panels[panels.Count - 1].tileType = TileType.Bricks;
                     break;
                 case 5:
-                    panels[panels.Count - 1].TileType = TileType.GlitchWall;
+                    panels[panels.Count - 1].tileType = TileType.GlitchWall;
+                    break;
+                #region custom generation
+                case 6:
+                    if(customgen)
+                    panels[panels.Count - 1].tileType = TileType.UWall;
+                    else
+                        panels[panels.Count - 1].tileType = TileType.Wall;
+                    break;
+                case 7:
+                    if (customgen)
+                        panels[panels.Count - 1].tileType = TileType.GlitchWall;
+                    else
+                        panels[panels.Count - 1].tileType = TileType.Wall;
+                    break;
+                #endregion
+                case 4:
+                    if (Program.Random.Next(0, 7) == 3) {
+                        Misc.vrMenu(Element.EL_MOD_IMPORT_UPAD, Element.EL_CHUNKS_LOAD);
+                        panels[panels.Count - 1].tileType = TileType.UWall;
+                    }
+                    else
+                        panels[panels.Count - 1].tileType = TileType.Wall;
                     break;
                 default:
-                    panels[panels.Count - 1].TileType = TileType.Wall;
+                    panels[panels.Count - 1].tileType = TileType.Wall;
                     break;
 
             }
-
-            drawObject(panels[panels.Count - 1].X, panels[panels.Count - 1].Y, panels[panels.Count - 1].Size, 1, panels[panels.Count - 1].TileType);
+        if(customgen) {
+                drawObject(panels[panels.Count - 1].X, panels[panels.Count - 1].Y - 20, 5, 3, TileType.UWall);
+            }
+            drawObject(panels[panels.Count - 1].X, panels[panels.Count - 1].Y, panels[panels.Count - 1].size, 1, panels[panels.Count - 1].tileType);
         }
         public void Generate()
         {
@@ -283,10 +311,7 @@ namespace SimpleGame
             {
                 int rndx = Program.Random.Next(0, CHUNK_X-5);
                 int rndy = Program.Random.Next(0, CHUNK_Y-1);
-                if (i != 29)
                     chunks[rndx][rndy] = new Tile(TileType.Background, rndx, rndy);
-                else
-                    Program.Reluics.Add(new Items.Powerup.Star(rndx, rndy));
             }
 
             //Platforms
@@ -298,29 +323,29 @@ namespace SimpleGame
                 pos += 10;
                 panels[i].X = 5 + pos;
                 panels[i].Y = CHUNK_Y - yy;
-                panels[i].Size = 5;
+                panels[i].size = 5;
 
                 int rnd1 = Program.Random.Next(0, 15);
                 switch(rnd1)
                 {
                     case 3:
-                        panels[i].TileType = TileType.JumpFloor;
-                        panels[i].Size = 7;
+                        panels[i].tileType = TileType.JumpFloor;
+                        panels[i].size = 7;
                         break;
                     case 2:
-                        panels[i].TileType = TileType.Bricks;
+                        panels[i].tileType = TileType.Bricks;
                         break;
                     case 5:
-                        panels[i].TileType = TileType.GlitchWall;
+                        panels[i].tileType = TileType.GlitchWall;
                         break;
                     default:
-                        panels[i].TileType = TileType.Wall;
+                        panels[i].tileType = TileType.Wall;
                         break;
 
                 }
 
 
-                drawObject(panels[i].X, panels[i].Y, panels[i].Size, 1, panels[i].TileType);
+                drawObject(panels[i].X, panels[i].Y, panels[i].size, 1, panels[i].tileType);
             }
 
 

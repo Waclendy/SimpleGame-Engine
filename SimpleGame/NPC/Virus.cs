@@ -14,6 +14,7 @@ namespace SimpleGame.NPC
             NPC_WALKABLE = true;
             NPC_SPEED = 40;
             Draw();
+            _this.type = Type.ENT_GLOBAL;
         }
 
         public override void Main()

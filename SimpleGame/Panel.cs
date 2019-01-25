@@ -7,8 +7,8 @@ namespace SimpleGame
 
         public int X = 0;
         public int Y = 0;
-        public int Size = 0;
-        public TileType TileType = TileType.None;
+        public int size = 0;
+        public TileType tileType = TileType.None;
 
         public Panel()
         {
@@ -18,8 +18,8 @@ namespace SimpleGame
         {
             X = x;
             Y = y;
-            Size = size;
-            TileType = tileType;
+            this.size = size;
+            this.tileType = tileType;
         }
     }
 }
