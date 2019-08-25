@@ -4,24 +4,34 @@ using SFML.Audio;
 
 namespace SimpleGame
 {
-    public static class SoundCore
+    public static partial  class SoundCore
     {
 
-        public const string CONTENT_PATH = @"Content\";
+        public const string CONTENT_PATH = @"..\Data";
         public static SortedDictionary<string, Sound> Sounds = new SortedDictionary<string, Sound>();
+        public static Random rnd = new Random();
         public static void Load()
         {
-            Sounds.Add("Amb", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\wsound_move.wav")));
-            Sounds["Amb"].Volume = 66;
-            Sounds.Add("Alarm", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\wsound_warn.ogg")));
-            Sounds.Add("Motion", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\wsound_motion.ogg")));
+
+           
             Sounds.Add("Glitch", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\hum2.wav")));
             Sounds.Add("Destroy", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\destroy.wav")));
             Sounds.Add("Error", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\glitch.wav")));
+            Sounds.Add("Wrong", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\wrong.wav")));
+
+            Sounds.Add("Shop Buy", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\shop_buy.wav")));
+            Sounds.Add("Shop Already", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\shop_already.wav")));
+            Sounds.Add("Shop NotEnough", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\shop_notenough.wav")));
+            Sounds.Add("Shop Open", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\shop_open.wav")));
+            Sounds.Add("Shop Close", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\shop_close.wav")));
+
             Sounds["Glitch"].Loop = true;
             Sounds["Glitch"].Volume = 50;
-            Sounds.Add("UI", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\World\\space_bed_03.ogg")));
-            Sounds["UI"].Loop = true;
+
+            Sounds.Add("Coin", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\coin.wav")));
+            Sounds["Glitch"].Volume = 50;
+
+
 
             Sounds.Add("TeleportUse", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Feedback\\Item_4.wav"))); 
             Sounds.Add("TeleportReload", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Feedback\\MaxMana.wav")));
@@ -35,8 +45,10 @@ namespace SimpleGame
             Sounds.Add("NoClip_End", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Feedback\\Item_29.wav")));
             Sounds.Add("Drink", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Feedback\\Item_3.wav")));
             Sounds.Add("Eat", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Feedback\\Item_2.wav")));
+            Sounds.Add("Whee", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\whee.wav")));
 
-
+            Sounds.Add("On", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\bootup.wav")));
+            Sounds.Add("Off", new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\Main\\shutdown.wav")));
 
             Sounds.Add("Phone", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\phone.wav")));
 
@@ -65,44 +77,32 @@ namespace SimpleGame
             Sounds.Add("Menu Beep", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\menu_beep.wav")));
             Sounds.Add("Menu Select", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\menu_selected.wav")));
 
-            //Sounds.Add("Menu Beep", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\blip2.wav")));
-            //Sounds.Add("Menu Select", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\blip1.wav")));
-
-            Sounds.Add("Speaker0", new Sound(new SoundBuffer($"{CONTENT_PATH}\\speaker.wav")));
             Sounds.Add("Speaker2", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Under\\speak_flowey.wav")));
             Sounds.Add("Speaker3", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\azazel.wav")));
+            Sounds.Add("Speaker4", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\buer.wav")));
+            Sounds.Add("Speaker7", new Sound(new SoundBuffer($"{CONTENT_PATH}\\Sounds\\Main\\asmodeus.wav")));
 
             Sounds["Speaker3"].Volume = 50;
         }
 
         public static void Play(string soundname)
         {
-            if (Program.stopAll)
-                return;
+            if(soundname == "Speaker7") {
+                switch(rnd.Next(0,3)) {
+                    case 0:
+                        Sounds["Speaker7"].Pitch = 0.9f;
+                        break;
+                    case 1:
+                        Sounds["Speaker7"].Pitch = 1f;
+                        break;
+                    case 2:
+                        Sounds["Speaker7"].Pitch = 1f;
+                        break;
+                }
+            }
             Sounds[soundname].Play();
         }
-        public static void Play(string subfoldier, string ext, string soundname,int minstack, int maxstack, int volume)
-        {
-            if (Program.stopAll)
-                return;
-            try
-            {
-                List<Sound> sounds = new List<Sound>(); // Tink
-                for (int i = minstack; i < maxstack; i++)
-                {
-                    Sound snd = new Sound(new SoundBuffer($"{CONTENT_PATH}\\sounds\\{subfoldier}\\{soundname}{i}.{ext}"));
-                    snd.Volume = volume;
-                    sounds.Add(snd);
-                }
-                sounds[Program.Random.Next(0, sounds.Count)].Play();
-            }
-            catch(Exception e)
-            {
-                Program.makeGlitch(1000, false);
-                Program.speakerEnabed = false;
-                Program.speakerSay(100, Voice.Soup, "В последний раз ты видел ошибку в игре доволно давно.", e.Message);
-            }
-        }
+      
 
     }
 }

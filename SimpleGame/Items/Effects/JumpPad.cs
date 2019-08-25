@@ -8,21 +8,21 @@ namespace SimpleGame.Items.Effects
     {
         public JumpPad()
         {
-            ButhTime = 500;
+            ButhTime = 30;
         }
 
         protected override void preMain()
         {
             Program.Player.npcColor = ConsoleColor.Blue;
-            Program.Player.trailType = TileType.JumpEffectBackground;
+            Program.Player.trailType = Tile.JumpeffectbackgroundId;
             Program.Player.JUMP_WEIGHT = 11;
         }
         protected override void Main()
         {
             Thread.Sleep(ButhTime);
-            Program.Player.JUMP_WEIGHT = NPC.Player.JUMP_DEFAULT_WEIGHT;
+            Program.Player.JUMP_WEIGHT = Program.Player.JUMP_DEFAULT_WEIGHT;
             Program.Player.npcColor = ConsoleColor.Cyan;
-            Program.Player.trailType = TileType.None;
+            Program.Player.trailType = Tile.NoneId;
         }
 
     }

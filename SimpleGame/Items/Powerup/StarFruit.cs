@@ -14,7 +14,8 @@ namespace SimpleGame.Items.Powerup
         {
             artifactColor = ConsoleColor.Green;
             artifactChar = "*";
-            useTime = 8 * 1000;
+            useTime = 8;
+            _this.spawnSoundEnabled = true;
             _this.type = Type.ENT_ITEM;
             _this.item = Item.IT_STAR_FRUIT;
             _this.oEvent = Event.EV_ITEM_SPAWN;
@@ -28,13 +29,14 @@ namespace SimpleGame.Items.Powerup
         {
 
                 SoundCore.Play("Eat");
-                Thread.Sleep(2000);
-                SoundCore.Play("Transformation");
+            if (!Wait(2, false))
+                return;
+            SoundCore.Play("Transformation");
                 Program.Player.npcColor = ConsoleColor.Green;
                 Program.StarFruitEnabled = true;
-                Thread.Sleep(useTime);
-
-                SoundCore.Play("Star Falling");
+            if (!Wait(useTime, true))
+                return;
+            SoundCore.Play("Star Falling");
                 Program.Player.npcColor = ConsoleColor.Cyan;
                 Program.StarFruitEnabled = false;
            

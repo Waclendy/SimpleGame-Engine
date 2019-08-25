@@ -7,6 +7,12 @@ using SFML.Audio;
 using SFML.Window;
 using System.Collections.Generic;
 using SFML.Graphics;
+using Newtonsoft.Json;
+
+using static SimpleGame.Tile;
+using static SimpleGame.Misc;
+using static SimpleGame.GAME;
+using static SimpleGame.Program;
 
 namespace SimpleGame
 {
@@ -17,15 +23,34 @@ namespace SimpleGame
         public static bool StarFruitEnabled = false;
         public static bool ingame = true;
 
-        public const int FRAME_RATE = 0;
-        public const int GRAVITY = 50;
+        public static sboolean EscapeMode = 0;
 
-        public static bool fastRespawn = false;
+        public static WorldShop shop;
+        public static sboolean shopClosed = 1;
+        public const int FRAME_RATE = 0;
+        public static int GRAVITY = 50;
+
+        public static int worldframe = 0;
+
+        public static double buthbonus = 0;
+        public static float coinbonus = 0;
+        public static int lifebonus = 0;
+        public static float luckbonus = 0;
+        public static float bluckbonus = 0;
+
+        public static float Coins = 0.0f;
+
+        public static int ScorePoints = 0;
 
         private static int speakerTarget = 0;
         public static bool speakerEnabed = false;
 
-        public static Music mainMusic = new Music(SoundCore.CONTENT_PATH + "\\Sounds\\World\\world_main_2.wav");
+
+        //escape
+        //mainMusic
+        public static Music mainMusic = new Music(SoundCore.CONTENT_PATH + "\\Music\\_endframe1.wav");
+        public static Music escape = new Music(SoundCore.CONTENT_PATH + "\\Music\\_bossframe1.wav");
+        public static Music mainmenu = new Music(SoundCore.CONTENT_PATH + "\\Music\\_empireearth.wav");
         public static bool stopAll = false;
         public static Random Random = new Random();
         public static List<Items.Powerup.Base> Reluics;
@@ -43,6 +68,18 @@ namespace SimpleGame
 
         public static void Intil()
         {
+            Coins = 10000.0f;
+            buthbonus = 0;
+            coinbonus = 0;
+            lifebonus = 0;
+            luckbonus = 0;
+            bluckbonus = 0;
+            ScorePoints = 0;
+            WorldTime = 0;
+
+
+
+            shop = new WorldShop();
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
@@ -51,7 +88,7 @@ namespace SimpleGame
             Player = new Player();
             Bot = new BOT();
             Game = new Game();
-            Timer = new Timer(new TimerCallback(Tick), null, 0, 1000);
+            Timer = new Timer(new TimerCallback(Tick), null, 3500, 3500);
             Reluics = new List<Items.Powerup.Base>();
 
             Console.CursorVisible = false;
@@ -71,20 +108,36 @@ namespace SimpleGame
             {
                 World.chunks[chunk] = new Tile[World.CHUNK_Y];
             }
-
-
+            GAME_InitChunkCopy();
         }
-
+        public static void Intro() {
+            mainmenu.Play();
+            mainmenu.Volume = 100;
+            mainmenu.Pitch = 2f;
+        }
         private static void Tick(object state)
         {
             WorldTime++;
-            
+            try {
+                if (EscapeMode) {
+                    World.ForceMove();
+                }
+            }
+            catch { }
         }
+        static unsafe void DebugMethod() {
+
+            // TileStruct* test = Tiles[1];
+            //test->BackColor = ConsoleColor.Black;
+        }
+
+      
 
         static void Main(string[] args)
         {
+            Startup.OnStart();
 
-
+            
 
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
@@ -97,62 +150,41 @@ namespace SimpleGame
 
             SoundCore.Load();
             Intil();
+           // Intro();
+            escape.Volume = 40;
+            // Game.EscapeTimer.Pause();
 
             UI.Menu menu = new UI.Menu();
-            string[] str = { "Начать Приключение", "Игровые Звуки", "Тест Диалога","Выход", "Настройки Графики", "Приключение", "Читы", "str[7] = \"Ultra читы\";"   };
+            string[] str = { "Начать Приключение", "Тестовый Метод", "Тест Диалога", "Перезапустить", "Выход" };
             gt:
             int menu_Select = 0;
             menu_Select = menu.MainMenu(str);
+
+
             switch (menu_Select)
             {
                 case 0:
                     SoundCore.Play("Menu Select");
                     mainMusic.Play();
+                    mainmenu.Stop();
                    
                     break;
                 case 2:
                     SoundCore.Play("Menu Select");
-                    speakerSay(100, Voice.Soup, "ДАВНО НЕ ВИДЕЛИСЬ");
+                    speakerSay(100, Voice.Asmodeus, "1241141435425145145344343463463");
                     goto gt;
-
                 case 3:
                     SoundCore.Play("Menu Select");
-                    speakerSay(70, Voice.Default, "Скоро увидимся, герой!**");
+                    Process.Start("SimpleGame.exe");
+                    Environment.Exit(0);
+                    break;
+                case 4:
+                    SoundCore.Play("Menu Select");
                     Environment.Exit(0);
                     break;
                 case 1:
-                    //    SoundCore.Play("Menu Select");
-                    //    List<string> sounds = new List<string>();
-                    //    foreach (KeyValuePair<string, Sound> stre in SoundCore.Sounds)
-                    //    {
-                    //        sounds.Add(stre.Key);
-                    //    }
-                    //    sounds.Add("Начать Игру");
-                    //    UI.Menu menu2 = new UI.Menu();
-                    //gt2:
-                    //    int menu_Select2 = 0;
-
-                    //    menu_Select2 = menu2.MainMenu(sounds.ToArray());
-
-                    //    try
-                    //    {
-                    //        if (menu_Select2 == sounds.Count - 1)
-                    //            break;
-                    //        SoundCore.Play(sounds[menu_Select2]);
-                    //    }
-                    //    catch
-                    //    {
-
-                    //    }
-                    //    goto gt2;
-
-                        string str2 = str[menu_Select];
-                        string str3 = "";
-                        for(int i = 0; i < str2.Length; i ++) {
-                            str3 += str2[Random.Next(0, str2.Length)];
-                        }
-                        SoundCore.Play("Error");
-                    str[menu_Select] = str3;
+                    DebugMethod();
+                    SoundCore.Play("Error");
                     goto gt;
                 case 7:
                     if (str[menu_Select] != "X") {

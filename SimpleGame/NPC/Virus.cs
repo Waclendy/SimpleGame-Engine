@@ -23,7 +23,7 @@ namespace SimpleGame.NPC
             inProcess = true;
 
 
-            Program.World.setTile(X, Y, TileType.Object);
+            Program.World.setTile(X, Y, Tile.ObjectId);
 
             Random rnd = new Random();
             int direct = rnd.Next(0, 4);

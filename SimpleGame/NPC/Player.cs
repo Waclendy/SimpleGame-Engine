@@ -35,9 +35,10 @@ namespace SimpleGame.NPC
         public event playerEvent playerJump = null;
         public event playerEvent playerTeleportUse = null;
         public event playerEvent playerFallSuccess = null;
+        public ivector lastPos = new ivector();
         public int JUMP_WEIGHT = 7;
-        public const int JUMP_DEFAULT_WEIGHT = 7;
-        public int JUMP_SPEED = 60;
+        public int JUMP_DEFAULT_WEIGHT = 7;
+        public int JUMP_SPEED = 50;
         public bool isFalling = false;
         public Direction playerDirect;
         public Direction direct = Direction.NONE;
@@ -60,6 +61,7 @@ namespace SimpleGame.NPC
             _this.X = X;
             _this.Y = Y;
         }
+        public void Teleport(ivector POS, bool likenew) => Teleport(POS.X, POS.Y, likenew);
         public void Teleport(int x, int y, bool likenew)
         {
             X = x;
@@ -86,7 +88,7 @@ namespace SimpleGame.NPC
             lasty = Y;
             lastx = X;
 
-            Program.World.setTile(X, Y, TileType.Object);
+            Program.World.setTile(X, Y, Tile.ObjectId);
 
             if(likenew)
             {
@@ -101,7 +103,7 @@ namespace SimpleGame.NPC
             {
                 if (inGravity)
                 {
-                    if (Program.World.getTile(X, Y - 1) == TileType.None)
+                    if (Program.World.getTile(X, Y - 1) == Tile.NoneId)
                     {
                         if (!Program.emptyCheck(X, Y + 1))
                         {
@@ -113,7 +115,7 @@ namespace SimpleGame.NPC
                 }
                 else
                 {
-                    if (Program.World.getTile(X, Y - 1) == TileType.None)
+                    if (Program.World.getTile(X, Y - 1) == Tile.NoneId)
                     {
                         Y--;
                     }
@@ -130,34 +132,50 @@ namespace SimpleGame.NPC
             npcChar = "";
         }
         public void ProcessPlayer()
-        { 
+        {
 
+            try {
 
-            try
-            {
-                if (Program.World.chunks[X][Y - 1] != null) ;
+                if (Program.World.getTile(X, Y + 1) != Tile.NoneId) {
+                    lastPos = new ivector(X, Y);
+                }
+
+                if (Program.World.getTile(lastPos.X, lastPos.Y + 1) == Tile.NoneId) {
+                    lastPos = new ivector(Program.World.panels[0].X + 2, Program.World.panels[0].Y - 5);
+                }
+            } catch { }
+
+            try {
+
             }
             catch
             {
                 playerFall.Invoke(this, new playerEventArgs(this));
             }
 
-            for(int i = 4; i <Program.World.panels.Count; i ++)
-            if (Program.World.panels[i].X <= X && Program.World.panels[i].Y - 1 == Y)
-            {
-                playerOnMiddle.Invoke(this, new playerEventArgs(this));
+            //for(int i = 4; i <Program.World.panels.Count; i ++)
+            //if (Program.World.panels[i].X <= X && Program.World.panels[i].Y - 1 <= Y)
+            //{
+            //    playerOnMiddle.Invoke(this, new playerEventArgs(this));
+            //}
+            try {
+                if (Program.Player.X >= (World.CHUNK_X - 1) / 2 && Program.World.getTile(Program.Player.X, Program.Player.Y + 1) != "0") {
+                    playerOnMiddle.Invoke(this, new playerEventArgs(this));
+                }
             }
-           
+            catch {
+
+            }
 
             try
             {
 
                 if (jump && jumpstep != 0)
                 {
-                    Thread.Sleep(40);
+                    Thread.Sleep(JUMP_SPEED);
                     if (jumpstep != 0)
                     {
-                        if (Program.World.getTile(X, Y - 1) == TileType.None)
+                        if (Program.World.getTile(X, Y - 1) == Tile.NoneId)
                         {
                             JUMP_SPEED += 10;
                             Y -= 1;
@@ -171,11 +189,11 @@ namespace SimpleGame.NPC
                             case Direction.NONE:
                                 break;
                             case Direction.RIGHT:
-                                if (Program.World.getTile(X + 1, Y) == TileType.None)
+                                if (Program.World.getTile(X + 1, Y) == Tile.NoneId)
                                     X++;
                                 break;
                             case Direction.LEFT:
-                                if (Program.World.getTile(X - 1, Y) == TileType.None)
+                                if (Program.World.getTile(X - 1, Y) == Tile.NoneId)
                                     X--;
                                 break;
                         }
@@ -192,7 +210,7 @@ namespace SimpleGame.NPC
                 {
                     if (inGravity)
                     {
-                        if (Program.World.getTile(X, Y + 1) == TileType.None)
+                        if (Program.World.getTile(X, Y + 1) == Tile.NoneId)
                         {
                             isFalling = true;
                             Y++;
@@ -202,11 +220,11 @@ namespace SimpleGame.NPC
                                 case Direction.NONE:
                                     break;
                                 case Direction.RIGHT:
-                                    if (Program.World.getTile(X + 1, Y) == TileType.None)
+                                    if (Program.World.getTile(X + 1, Y) == Tile.NoneId)
                                         X++;
                                     break;
                                 case Direction.LEFT:
-                                    if (Program.World.getTile(X - 1, Y) == TileType.None)
+                                    if (Program.World.getTile(X - 1, Y) == Tile.NoneId)
                                         X--;
                                     break;
                             }
@@ -228,7 +246,6 @@ namespace SimpleGame.NPC
                     // playerFall.Invoke(this, new playerEventArgs(this));
                     _this.oEvent = Event.EV_PLAYER_DEAD;
                 }
-                Thread.Sleep(Program.FRAME_RATE);
             }
             catch
             {

@@ -6,6 +6,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using static SimpleGame.Tile;
+using static SimpleGame.Misc;
+using static SimpleGame.GAME;
+using static SimpleGame.Program;
+
 namespace SimpleGame {
     public class Sprite {
 

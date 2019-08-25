@@ -4,7 +4,7 @@ using System.Threading;
 namespace SimpleGame.Items.Effects
 {
    
-    public class Base
+    public partial class Base
     {
 
         protected Thread Processor;

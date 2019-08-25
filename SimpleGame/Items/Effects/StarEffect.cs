@@ -20,7 +20,7 @@ namespace SimpleGame.Items.Effects
         protected override void Main()
         {
             Thread.Sleep(ButhTime);
-            Program.Player.JUMP_WEIGHT = NPC.Player.JUMP_DEFAULT_WEIGHT;
+            Program.Player.JUMP_WEIGHT = Program.Player.JUMP_DEFAULT_WEIGHT;
             Program.Player.npcColor = ConsoleColor.Cyan;
             Program.Player.npcChar = "X";
         }

@@ -14,8 +14,8 @@ namespace SimpleGame.Items.Powerup
         {
             artifactColor = ConsoleColor.Red;
             artifactChar = ".";
-            useTime = 8 * 1000;
-            spawnSoundEnabled = false;
+            useTime = 8;
+            _this.spawnSoundEnabled = false;
             _this.type = Type.ENT_ITEM;
             _this.item = Item.IT_STAR;
             _this.oEvent = Event.EV_ITEM_SPAWN;
@@ -30,7 +30,7 @@ namespace SimpleGame.Items.Powerup
 
             SoundCore.Play("Eat");
             Effects.StarEffect starEffect = new Effects.StarEffect();
-            starEffect.Enable(7.4);
+            starEffect.Enable(useTime);
         }
     }
 }

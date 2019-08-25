@@ -1,37 +1,43 @@
 ﻿using System;
 using System.Threading;
 
+using static SimpleGame.Tile;
+using static SimpleGame.Misc;
+using static SimpleGame.GAME;
+using static SimpleGame.Program;
+
 namespace SimpleGame
 {
     partial class Program
     {
         public static bool glitcheScreen = false;
-
+        public static srender RenderProjectiles = new srender();
         class ProcessThread
         {
            public void Run2()
             {
                 while(ingame)
                 {
-                    Bot.Draw();
-                    Bot.ProcessPlayer();
+                    //Bot.Draw();
+                    //Bot.ProcessPlayer();
                 }
             }
             public void Run()
             {
                 Thread thrd = new Thread(Run2);
-
+                RenderProjectiles.Sleep = 7;
+                RenderProjectiles.Enable();
 
                 //thrd.Start();
 
-                    for (int x = 0; x < World.CHUNK_X; x++)
+                for (int x = 0; x < World.CHUNK_X; x++)
                     {
 
                         for (int y = 0; y < World.CHUNK_Y; y++)
                         {
                             if (World.chunks[x][y] == null) continue;
 
-                            else if (World.chunks[x][y].Type == TileType.Spawnpoint)
+                            else if (World.chunks[x][y].Id == Tile.SpawnpointId)
                             {
                                 Player.X = x;
                                 Player.Y = y;
@@ -49,6 +55,13 @@ namespace SimpleGame
                     {
                     if (Pause)
                         continue;
+
+                    if(EscapeMode) {
+                        if(mainMusic.Status == SFML.Audio.SoundStatus.Playing)
+                        mainMusic.Stop();
+                        if (escape.Status != SFML.Audio.SoundStatus.Playing)
+                            escape.Play();
+                    }
                         Key = Console.ReadKey(true);
                         if (stopAll)
                             continue;
@@ -58,16 +71,16 @@ namespace SimpleGame
                             switch (Key.Key)
                             {
 
-
+                            
                                 case ConsoleKey.D:
                                     Player.playerDirect = Direction.RIGHT;
                                     Player.direct = Player.playerDirect;
                                     if (!Player.inGravity)
                                     {
-                                        if (World.getTile(Player.X + 1, Player.Y) != TileType.None)
+                                        if (World.getTile(Player.X + 1, Player.Y) != Tile.NoneId)
                                         {
                                             SoundCore.Play("NoClip");
-                                            while (World.getTile(Player.X + 1, Player.Y) != TileType.None)
+                                            while (World.getTile(Player.X + 1, Player.Y) != Tile.NoneId)
                                             {
                                                 Player.X++;
                                             }
@@ -77,7 +90,7 @@ namespace SimpleGame
 
                                     }
                                     else
-                                    if (World.getTile(Player.X + 1, Player.Y) == TileType.None)
+                                    if (World.getTile(Player.X + 1, Player.Y) == Tile.NoneId)
                                     {
                                         Player.X++;
                                     }
@@ -88,10 +101,10 @@ namespace SimpleGame
                                     Player.direct = Player.playerDirect;
                                     if (!Player.inGravity)
                                     {
-                                        if (World.getTile(Player.X - 1, Player.Y) != TileType.None)
+                                        if (World.getTile(Player.X - 1, Player.Y) != Tile.NoneId)
                                         {
                                             SoundCore.Play("NoClip");
-                                            while (World.getTile(Player.X - 1, Player.Y) != TileType.None)
+                                            while (World.getTile(Player.X - 1, Player.Y) != Tile.NoneId)
                                             {
                                                 Player.X--;
                                             }
@@ -101,18 +114,21 @@ namespace SimpleGame
 
                                     }
                                     else
-                                    if (World.getTile(Player.X - 1, Player.Y) == TileType.None)
+                                    if (World.getTile(Player.X - 1, Player.Y) == Tile.NoneId)
                                     {
                                         Player.X--;
                                     }
                                     break;
+                            case ConsoleKey.U:
+                                shop.Open();
+                                break;
                                 case ConsoleKey.S:
                                     if (!Player.inGravity)
                                     {
-                                        if (World.getTile(Player.X, Player.Y + 1) != TileType.None)
+                                        if (World.getTile(Player.X, Player.Y + 1) != Tile.NoneId)
                                         {
                                             SoundCore.Play("NoClip");
-                                            while (World.getTile(Player.X, Player.Y + 1) != TileType.None)
+                                            while (World.getTile(Player.X, Player.Y + 1) != Tile.NoneId)
                                             {
                                                 Player.Y++;
                                             }
@@ -128,20 +144,16 @@ namespace SimpleGame
                                 case ConsoleKey.Spacebar:
                                 Player._this.oEvent = Event.EV_PLAYER_JUMP;
                                     break;
-                                case ConsoleKey.O:
-                                //if (!World.customgen) {
-                                //    Misc.vrMenu(Element.EL_MOD_IMPORT_BLOCK_GEN, Element.EL_WORLD_LOAD, Element.EL_MOD_IMPORT_BLOCK_GEN, Element.EL_CHUNKS_LOAD, Element.EL_MOD_IMPORT_BLOCK_GEN, Element.EL_MOD_IMPORT_BLOCK_GEN);
-                                //    World.customgen = true;
-                                //}
-                                Reluics.Add(new Items.Powerup.God(30, 17));
+                            case ConsoleKey.Tab:
+                                Projectiles.Base.Push(Player.X, Player.Y, (int)Player.direct);
                                 break;
                                 case ConsoleKey.W:
                                     if (!Player.inGravity)
                                     {
-                                        if (World.getTile(Player.X, Player.Y - 1) != TileType.None)
+                                        if (World.getTile(Player.X, Player.Y - 1) != Tile.NoneId)
                                         {
                                             SoundCore.Play("NoClip");
-                                            while (World.getTile(Player.X, Player.Y - 1) != TileType.None)
+                                            while (World.getTile(Player.X, Player.Y - 1) != Tile.NoneId)
                                             {
                                                 Player.Y--;
                                             }
@@ -159,9 +171,6 @@ namespace SimpleGame
                         }
                         catch
                         {
-                        Program.makeGlitch(1000, false);
-                        Program.speakerEnabed = false;
-                        Program.speakerSay(100, Voice.Soup, "В последний раз ты видел ошибку в игре доволно давно.");
                     }
 
                     }
@@ -201,7 +210,6 @@ namespace SimpleGame
         }
         public static void _speakerSay(int speed, Voice Voice, params string[] text)
         {
-            while (Pause) { }
 
             if (speakerEnabed)
                 return;
@@ -234,7 +242,16 @@ namespace SimpleGame
                 {
                     foreach (char o in txt)
                     {
-                        
+                        Console.SetCursorPosition(1, 32);
+                        ConsolePaint.Paint(1, 32, ConsoleColor.Black, ConsoleColor.White, "+-------------------------------------------------------------------------------------------+");
+                        Console.SetCursorPosition(1, 33);
+                        ConsolePaint.Paint(1, 33, ConsoleColor.Black, ConsoleColor.White, "|                                                                                           |");
+                        Console.SetCursorPosition(1, 34);
+                        ConsolePaint.Paint(1, 34, ConsoleColor.Black, ConsoleColor.White, "| >>>                                                                                       |");
+                        Console.SetCursorPosition(1, 35);
+                        ConsolePaint.Paint(1, 35, ConsoleColor.Black, ConsoleColor.White, "|                                                                                           |");
+                        Console.SetCursorPosition(1, 36);
+                        ConsolePaint.Paint(1, 36, ConsoleColor.Black, ConsoleColor.White, "+-------------------------------------------------------------------------------------------+");
 
                         if (Console.CursorLeft==89)
                         {
@@ -246,14 +263,16 @@ namespace SimpleGame
                             speakerTarget = 0;
                             Console.SetCursorPosition(7, 34);
                         }
-                        while (Pause) { }
                         if (o == '*')
                         {
+                            ConsolePaint.Paint(7, 34, ConsoleColor.Black, ConsoleColor.White, alstr);
                             Thread.Sleep(500);
+
                             continue;
                         }
                         else if (o == '&')
                         {
+                            ConsolePaint.Paint(7, 34, ConsoleColor.Black, ConsoleColor.White, alstr);
                             Thread.Sleep(200);
                             continue;
                         }
@@ -274,11 +293,7 @@ namespace SimpleGame
                         ConsolePaint.Paint(7, 34, ConsoleColor.Black, ConsoleColor.White, alstr);
                         speakerTarget++;
 
-                        if(o != ' ' && Voice == Voice.Gaster)
-                        {
-                            SoundCore.Play("Under", "wav", "speak_g", 0, 5, 100);
-                        }
-                        else if (o != ' ' && Voice != Voice.None && Voice != Voice.Gaster)
+if (o != ' ' && Voice != Voice.None && Voice != Voice.Gaster)
                             SoundCore.Play("Speaker" + ((int)Voice).ToString());
 
                         if (o == '.' || o == ',')
@@ -291,8 +306,8 @@ namespace SimpleGame
                 {
 
                 }
-                if (text.Length != 1)
-                    Thread.Sleep(1000);
+
+                Thread.Sleep(1000);
 
                 for (int i = 0; i < 86; i++)
                 {
@@ -302,16 +317,27 @@ namespace SimpleGame
                 Console.SetCursorPosition(0, 0);
                 speakerTarget = 0;
             }
+
             speakerEnabed = false;
+            Console.SetCursorPosition(1, 32);
+            ConsolePaint.Paint(1, 32, ConsoleColor.Black, ConsoleColor.White, "                                                                                             ");
+            Console.SetCursorPosition(1, 33);
+            ConsolePaint.Paint(1, 33, ConsoleColor.Black, ConsoleColor.White, "                                                                                             ");
+            Console.SetCursorPosition(1, 34);
+            ConsolePaint.Paint(1, 34, ConsoleColor.Black, ConsoleColor.White, "                                                                                             ");
+            Console.SetCursorPosition(1, 35);
+            ConsolePaint.Paint(1, 35, ConsoleColor.Black, ConsoleColor.White, "                                                                                             ");
+            Console.SetCursorPosition(1, 36);
+            ConsolePaint.Paint(1, 36, ConsoleColor.Black, ConsoleColor.White, "                                                                                             ");
             return;
 
         f1:
             Thread.Sleep(600);
             foreach (string txt in text) {
                 alstr = "";
-                Clear();
                 try {
                     foreach (char o in txt) {
+
                         if (Console.CursorLeft == 89) {
                             for (int i = 0; i < 86; i++) {
                                 Console.SetCursorPosition(7 + i, 34);
@@ -320,7 +346,6 @@ namespace SimpleGame
                             speakerTarget = 0;
                             Console.SetCursorPosition(7, 34);
                         }
-                        while (Pause) { }
                         if (o == '*') {
                             Thread.Sleep(500);
                             continue;
@@ -341,10 +366,7 @@ namespace SimpleGame
                         alstr += o;
                         ConsolePaint.Paint(7, 34, ConsoleColor.Black, ConsoleColor.White, alstr);
                         speakerTarget++;
-
-                        if (o != ' ' && Voice == Voice.Gaster) {
-                            SoundCore.Play("Under", "wav", "speak_g", 0, 5, 100);
-                        } else if (o != ' ' && Voice != Voice.None && Voice != Voice.Gaster)
+                        if (o != ' ' && Voice != Voice.None && Voice != Voice.Gaster)
                             SoundCore.Play("Speaker" + ((int)Voice).ToString());
 
                         if (o == '.' || o == ',')
@@ -379,6 +401,54 @@ namespace SimpleGame
                 Clear();
 
             Pause = false;
+        }
+
+        private static int _shakes = 0;
+        private static int _intervalshake = 40;
+        private static bool _shakesound = true;
+        public static bool shakealready = false;
+        public static void Shake(int shakecount, bool sound) {
+            _shakes = shakecount;
+            _shakesound = sound;
+            _intervalshake = 40;
+            Thread thrd = new Thread(_shake);
+            thrd.Start();
+        }
+        public static void Shake(int shakecount, bool sound, int interval) {
+            _intervalshake = interval;
+            _shakes = shakecount;
+            _shakesound = sound;
+            Thread thrd = new Thread(_shake);
+            thrd.Start();
+        }
+        private static void _shake() {
+            if (shakealready)
+                return;
+            shakealready = true;
+            if(_shakesound)
+            SoundCore.Play("Error");
+            for (int i = 0; i < _shakes; i++) {
+                ConsolePaint.Clear();
+                switch(Random.Next(0, 4)) {
+                    case 0:
+                        ConsolePaint.offset.X += Random.Next(0, 4);
+                        break;
+                    case 1:
+                        ConsolePaint.offset.X -= Random.Next(0, 4);
+                        break;
+                    case 2:
+                        ConsolePaint.offset.Y += Random.Next(0, 4);
+                        break;
+                    case 3:
+                        ConsolePaint.offset.Y -= Random.Next(0, 4);
+                        break;
+                }
+                Thread.Sleep(_intervalshake);
+                ConsolePaint.offset = new ivector(0, 0);
+            }
+            ConsolePaint.Clear();
+            ConsolePaint.offset = new ivector(0, 0);
+            shakealready = false;
         }
         public static void Clear() {
             Pause = true;

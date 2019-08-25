@@ -2,26 +2,23 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace SimpleGame
-{
-    public struct ivector {
-        public int X;
-        public int Y;
-        public ivector(int x, int y) {
-            X = x;
-            Y = y;
-        }
-    }
+using static SimpleGame.Misc;
+using static SimpleGame.GAME;
+using static SimpleGame.Tile;
+using static SimpleGame.Program;
+
+namespace SimpleGame {
+
     public struct entity {
         public Type type;
         public Item item;
         public Event oEvent;
         public Flag oFlags;
+        public bool spawnSoundEnabled;
         public int X;
         public int Y;
-        
-    }
 
+    }
     //OLD ENUMS
     public enum Direction : int {
         NONE = 0,
@@ -42,7 +39,9 @@ namespace SimpleGame
         Default = 0,
         Flowey = 2,
         Soup = 3,
+        Buer = 4,
         Gaster = 6,
+        Asmodeus = 7, 
         None = -1
     }
 
@@ -64,6 +63,7 @@ namespace SimpleGame
         IT_STAR,
         IT_TEST_POWERUP,
         IT_GOD,
+        IT_COIN,
         IT_URAN
     }
     [Flags]
@@ -91,6 +91,42 @@ namespace SimpleGame
         public static void LOG(string message) {
             System.Windows.Forms.MessageBox.Show(message + "                                                                                ", "LOG");
         }
+        public static string format(string text, int num) {
+            //if (num == 1)
+            //    return text + "a";
+            //if (num == 2)
+            //    return text + "ы";
+            //if (num == 3)
+            //    return text + "ы";
+            //if (num == 4)
+            //    return text + "ы";
+
+            //for (int i = 0; i < 300; i += 10)
+            //    if (num > 21 && num > i - 10 && num <= (4 + i - 10))
+            //        return text + "ы";
+
+            return text;
+
+        }
+        public static void writeFormat(string text) {
+            ConsoleColor currentColor = ConsoleColor.White;
+            for(int i = 0; i < text.Length; i++) {
+                if(text[i] == '^') {
+                    currentColor = ConsoleColor.White;
+                    continue;
+                }
+                if (text[i] == '<') {
+                    currentColor = ConsoleColor.Green;
+                    continue;
+                }
+                if (text[i] == '>') {
+                    currentColor = ConsoleColor.Red;
+                    continue;
+                }
+
+                ConsolePaint.Paint(Console.CursorLeft, Console.CursorTop, ConsoleColor.Black, currentColor, text[i].ToString());
+            }
+        }
         public static int calcWorldPathSum(ivector startpos, ivector endpos) {
             int num1 = (endpos.X - startpos.X) + (endpos.Y - startpos.Y);
             if (num1 < 0)
@@ -103,14 +139,14 @@ namespace SimpleGame
             var y = 0;
 
             for(int i = 0; i < calcWorldPathSum(startpos, endpos); i ++) {
-                if (startpos.X + x < endpos.X && Program.World.getTile(startpos.X + x, startpos.Y + y) == TileType.None) {
+                if (startpos.X + x < endpos.X && Program.World.getTile(startpos.X + x, startpos.Y + y) == "0") {
                     path.Add("+X");
                     x++;
-                } else if (startpos.X + x >= endpos.X && Program.World.getTile(startpos.X + x, startpos.Y + y) == TileType.None)
-                    if (startpos.Y + y < endpos.Y && Program.World.getTile(startpos.X + x, startpos.Y + y) == TileType.None) {
+                } else if (startpos.X + x >= endpos.X && Program.World.getTile(startpos.X + x, startpos.Y + y) == "0")
+                    if (startpos.Y + y < endpos.Y && Program.World.getTile(startpos.X + x, startpos.Y + y) == "0") {
                         path.Add("+Y");
                         y++;
-                    } else if (startpos.Y + y > endpos.Y && Program.World.getTile(startpos.X + x, startpos.Y + y) == TileType.None) {
+                    } else if (startpos.Y + y > endpos.Y && Program.World.getTile(startpos.X + x, startpos.Y + y) == "0") {
                         path.Add("-Y");
                         y--;
                     }
@@ -145,35 +181,36 @@ namespace SimpleGame
         public static void dispatchEvent(ref entity ent) {
             if (ent.oEvent == Event.EV_NONE)
               return;
-
             if (ent.type == Type.ENT_PLAYER) { //PLAYER
                 switch (ent.oEvent) {
                     case Event.EV_PLAYER_JUMP:
-                        Program.Player.Jump();
+                        Player.Jump();
                         break;
                     case Event.EV_PLAYER_DEAD:
                         if (ent.oFlags.HasFlag(Flag.FL_NOTDEADABLE))
                             return;
+                        if (lifebonus == 0 ) {
 
-                        if (!Program.fastRespawn) { 
-                        Program.Player.Kill();
+                        Player.Kill();
+                            worldframe++;
                         Thread.Sleep(300);
 
-                        Program.StarFruitEnabled = false;
+                        StarFruitEnabled = false;
                         Console.Clear();
-                        Program.Intil();
+                        Intil();
                         Program.World.Generate();
                         Thread.Sleep(200);
-                        Program.Player.Teleport(Program.World.panels[0].X + 2, Program.World.panels[0].Y - 5, true);
+                        Player.Teleport(Program.World.panels[0].X + 2, Program.World.panels[0].Y - 5, true);
                          }
                          else
                          {
-                            Program.StarFruitEnabled = false;
+                            lifebonus -= 1;
+                            StarFruitEnabled = false;
                             Console.Clear();
                             //Program.Intil();
                            // Program.World.Generate();
                             SoundCore.Play("Error");
-                            Program.Player.Teleport(Program.World.panels[0].X + 2, Program.World.panels[0].Y - 5, true);
+                            Player.Teleport(Player.lastPos, true);
 
                          }
                         break;
@@ -196,6 +233,7 @@ namespace SimpleGame
                             ent.X = 99;
                         if (ent.Y <= 0)
                             ent.Y = 0;
+                        if(ent.spawnSoundEnabled)
                             SoundCore.Play("Item Spawned");
                         break;
                     default:

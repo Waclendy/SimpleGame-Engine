@@ -14,8 +14,8 @@ namespace SimpleGame.Items.Powerup
         {
             artifactColor = ConsoleColor.DarkMagenta;
             artifactChar = "#";
-            useTime = 8 * 1000;
-            spawnSoundEnabled = false;
+            useTime = 0;
+            _this.spawnSoundEnabled = false;
             _this.type = Type.ENT_ITEM;
             _this.item = Item.IT_URAN;
             _this.oEvent = Event.EV_ITEM_SPAWN;

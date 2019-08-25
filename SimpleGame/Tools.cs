@@ -1,6 +1,11 @@
 ﻿using System;
 using System.IO;
 
+using static SimpleGame.Tile;
+using static SimpleGame.Misc;
+using static SimpleGame.GAME;
+using static SimpleGame.Program;
+
 namespace SimpleGame
 {
     partial class Program
@@ -28,7 +33,7 @@ namespace SimpleGame
             Console.Write("*");
 
         }
-        public static bool emptyCheck(int localx, int localy) => World.getTile(localx, localy) == TileType.None;
+        public static bool emptyCheck(int localx, int localy) => World.getTile(localx, localy) == Tile.NoneId;
        
     }
 }

@@ -3,15 +3,14 @@ using System.Threading;
 
 namespace SimpleGame.NPC
 {
-    public class Base
-    {
+    public partial class Base{
 
         public string npcChar = " ";
         public ConsoleColor npcColor = ConsoleColor.White;
         public bool NPC_WALKABLE = false;
         public int NPC_SPEED = 0;
 
-        public TileType trailType = TileType.None;
+        public string trailType = "0";
 
         public bool inGravity = true;
 
@@ -41,7 +40,7 @@ namespace SimpleGame.NPC
                 Y = 0;
 
 
-            if (trailType != TileType.None)
+            if (trailType != Tile.NoneId)
                 Program.World.setTile(lastx, lasty, trailType);
 
             ConsolePaint.Paint(lastx, lasty, ConsolePaint.DEFAULT_BACKGROUND, ConsolePaint.DEFAULT_FOREGROUND, " ");
@@ -73,10 +72,10 @@ namespace SimpleGame.NPC
                 lasty = Y;
                 lastx = X;
 
-                Program.World.setTile(X, Y, TileType.Object);
+                Program.World.setTile(X, Y, Tile.ObjectId);
 
-                if(Program.World.getTile(X, Y) != TileType.Wall)
-                    if (Program.World.getTile(X, Y) == TileType.None)
+                if(Program.World.getTile(X, Y) != Tile.WallId)
+                    if (Program.World.getTile(X, Y) == Tile.NoneId)
                     {
                         Y++;
                         Thread.Sleep(Program.GRAVITY);

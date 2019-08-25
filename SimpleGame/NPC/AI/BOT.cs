@@ -58,7 +58,7 @@ namespace SimpleGame.NPC
             lasty = Y;
             lastx = X;
 
-            Program.World.setTile(X, Y, TileType.Object);
+            Program.World.setTile(X, Y, Tile.ObjectId);
 
             if (likenew)
             {
@@ -72,7 +72,7 @@ namespace SimpleGame.NPC
             {
                 if (inGravity)
                 {
-                    if (Program.World.getTile(X, Y - 1) == TileType.None)
+                    if (Program.World.getTile(X, Y - 1) == Tile.NoneId)
                     {
                         if (!Program.emptyCheck(X, Y + 1))
                         {
@@ -83,7 +83,7 @@ namespace SimpleGame.NPC
                 }
                 else
                 {
-                    if (Program.World.getTile(X, Y - 1) == TileType.None)
+                    if (Program.World.getTile(X, Y - 1) == Tile.NoneId)
                     {
                         Y--;
                     }
@@ -120,7 +120,7 @@ namespace SimpleGame.NPC
                     Thread.Sleep(40);
                     if (jumpstep != 0)
                     {
-                        if (Program.World.getTile(X, Y - 1) == TileType.None)
+                        if (Program.World.getTile(X, Y - 1) == Tile.NoneId)
                         {
                             JUMP_SPEED += 10;
                             Y -= 1;
@@ -134,11 +134,11 @@ namespace SimpleGame.NPC
                             case Direction.NONE:
                                 break;
                             case Direction.RIGHT:
-                                if (Program.World.getTile(X + 1, Y) == TileType.None)
+                                if (Program.World.getTile(X + 1, Y) == Tile.NoneId)
                                     X++;
                                 break;
                             case Direction.LEFT:
-                                if (Program.World.getTile(X - 1, Y) == TileType.None)
+                                if (Program.World.getTile(X - 1, Y) == Tile.NoneId)
                                     X--;
                                 break;
                         }
@@ -155,7 +155,7 @@ namespace SimpleGame.NPC
                 {
                     if (inGravity)
                     {
-                        if (Program.World.getTile(X, Y + 1) == TileType.None)
+                        if (Program.World.getTile(X, Y + 1) == Tile.NoneId)
                         {
                             isFalling = true;
                             Y++;
@@ -165,11 +165,11 @@ namespace SimpleGame.NPC
                                 case Direction.NONE:
                                     break;
                                 case Direction.RIGHT:
-                                    if (Program.World.getTile(X + 1, Y) == TileType.None)
+                                    if (Program.World.getTile(X + 1, Y) == Tile.NoneId)
                                         X++;
                                     break;
                                 case Direction.LEFT:
-                                    if (Program.World.getTile(X - 1, Y) == TileType.None)
+                                    if (Program.World.getTile(X - 1, Y) == Tile.NoneId)
                                         X--;
                                     break;
                             }
@@ -207,11 +207,11 @@ namespace SimpleGame.NPC
                 case Direction.NONE:
                     break;
                 case Direction.RIGHT:
-                    if (Program.World.getTile(X + 1, Y) == TileType.None)
+                    if (Program.World.getTile(X + 1, Y) == Tile.NoneId)
                         X++;
                     break;
                 case Direction.LEFT:
-                    if (Program.World.getTile(X - 1, Y) == TileType.None)
+                    if (Program.World.getTile(X - 1, Y) == Tile.NoneId)
                         X--;
                     break;
             }
@@ -236,7 +236,7 @@ namespace SimpleGame.NPC
                                 for (int i = 0; i < 30; i++)
                                 {
                                     if (!was)
-                                        was = Program.World.getTile(X, Y + i) != TileType.None;
+                                        was = Program.World.getTile(X, Y + i) != Tile.NoneId;
                                 }
                             }
                             catch
@@ -265,7 +265,7 @@ namespace SimpleGame.NPC
 
                         Move(AI_Direction);
 
-                        if (Program.World.getTile(X + 1, Y + 1) == TileType.None)
+                        if (Program.World.getTile(X + 1, Y + 1) == Tile.NoneId)
                         {
                             Jump();
                             Thread.Sleep(200);

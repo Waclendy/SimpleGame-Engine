@@ -12,10 +12,11 @@ namespace SimpleGame.Items.Powerup
         
         public God(int x, int y)
         {
-            artifactColor = ConsoleColor.DarkRed;
-            artifactChar = "x";
-            useTime = 8 * 1000;
-            spawnSoundEnabled = false;
+            artifactColor = ConsoleColor.Yellow;
+            artifactbackColor = ConsoleColor.Black;
+            artifactChar = "$";
+            useTime = 7.4;
+            _this.spawnSoundEnabled = false;
             _this.type = Type.ENT_ITEM;
             _this.item = Item.IT_GOD;
             _this.oEvent = Event.EV_ITEM_SPAWN;
@@ -27,18 +28,18 @@ namespace SimpleGame.Items.Powerup
 
         protected override void _pickup()
         {
-
+           
             SoundCore.Play("Eat");
-            Thread.Sleep(1400);
+            if (!Wait(1.4, false))
+                return;
             Program.Clear();
-            Program.Player.npcColor = ConsoleColor.Red;
-            Program.Player.npcChar = "E";
-            Program.fastRespawn = true;
-            Thread.Sleep(5400);
+            Program.Player.npcChar = "^";
+            Program.lifebonus = 9999;
+              if (!Wait(useTime, true))
+                        return;
             Program.Clear();
-            Program.Player.npcColor = ConsoleColor.Cyan;
             Program.Player.npcChar = "X";
-            Program.fastRespawn = false;
+            Program.lifebonus = 0;
         }
     }
 }
